@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pake: From Webpage to Desktop App - Interactive Course</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* --- BACKGROUNDS --- */
+      --color-bg:             #FAF7F2;
+      --color-bg-warm:        #F5F0E8;
+      --color-bg-code:        #1E1E2E;
+      --color-text:           #2C2A28;
+      --color-text-secondary: #6B6560;
+      --color-text-muted:     #9E9790;
+      --color-border:         #E5DFD6;
+      --color-border-light:   #EEEBE5;
+      --color-surface:        #FFFFFF;
+      --color-surface-warm:   #FDF9F3;
+
+      /* --- ACCENT (rust orange for Rust-based project) --- */
+      --color-accent:         #E06B56;
+      --color-accent-hover:   #C85A45;
+      --color-accent-light:   #FDEEE9;
+      --color-accent-muted:   #E8836C;
+
+      /* --- SEMANTIC --- */
+      --color-success:        #2D8B55;
+      --color-success-light:  #E8F5EE;
+      --color-error:          #C93B3B;
+      --color-error-light:    #FDE8E8;
+      --color-info:           #2A7B9B;
+      --color-info-light:     #E4F2F7;
+      --color-warning:        #D4A843;
+      --color-warning-light:  #FEF7E8;
+
+      /* --- ACTOR COLORS --- */
+      --color-actor-1:        #E06B56;  /* CLI - Rust orange */
+      --color-actor-2:        #2A7B9B;  /* Config - Teal */
+      --color-actor-3:        #7B6DAA;  /* Rust Core - Plum */
+      --color-actor-4:        #D4A843;  /* Icon Pipeline - Golden */
+      --color-actor-5:        #2D8B55;  /* WebView - Forest */
+
+      /* --- FONTS --- */
+      --font-display:  'Bricolage Grotesque', Georgia, serif;
+      --font-body:     'DM Sans', -apple-system, sans-serif;
+      --font-mono:     'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+      /* --- TYPE SCALE --- */
+      --text-xs:   0.75rem;
+      --text-sm:   0.875rem;
+      --text-base: 1rem;
+      --text-lg:   1.125rem;
+      --text-xl:   1.25rem;
+      --text-2xl:  1.5rem;
+      --text-3xl:  1.875rem;
+      --text-4xl:  2.25rem;
+      --text-5xl:  3rem;
+      --text-6xl:  3.75rem;
+
+      /* --- LINE HEIGHTS --- */
+      --leading-tight:  1.15;
+      --leading-snug:   1.3;
+      --leading-normal: 1.6;
+      --leading-loose:  1.8;
+
+      /* --- SPACING --- */
+      --space-1:  0.25rem;
+      --space-2:  0.5rem;
+      --space-3:  0.75rem;
+      --space-4:  1rem;
+      --space-5:  1.25rem;
+      --space-6:  1.5rem;
+      --space-8:  2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+
+      --content-width:      800px;
+      --content-width-wide: 1000px;
+      --nav-height:         50px;
+      --radius-sm:  8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-full: 9999px;
+
+      /* --- SHADOWS --- */
+      --shadow-sm:  0 1px 2px rgba(44, 42, 40, 0.05);
+      --shadow-md:  0 4px 12px rgba(44, 42, 40, 0.08);
+      --shadow-lg:  0 8px 24px rgba(44, 42, 40, 0.1);
+      --shadow-xl:  0 16px 48px rgba(44, 42, 40, 0.12);
+
+      /* --- ANIMATIONS --- */
+      --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --duration-fast:   150ms;
+      --duration-normal: 300ms;
+      --duration-slow:   500ms;
+      --stagger-delay:   120ms;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-snap-type: y proximity;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: var(--leading-normal);
+      color: var(--color-text);
+      background: var(--color-bg);
+      background-image: radial-gradient(
+        ellipse at 20% 50%,
+        rgba(224, 107, 86, 0.03) 0%,
+        transparent 50%
+      );
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-border);
+      border-radius: var(--radius-full);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: rgba(250, 247, 242, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--color-border-light);
+      z-index: 1000;
+    }
+
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--color-accent);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      height: 100%;
+    }
+
+    .nav-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: var(--text-lg);
+      color: var(--color-accent);
+    }
+
+    .nav-dots {
+      display: flex;
+      gap: var(--space-3);
+    }
+
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--color-text-muted);
+      background: transparent;
+      cursor: pointer;
+      transition: all var(--duration-fast);
+      position: relative;
+    }
+
+    .nav-dot:hover {
+      border-color: var(--color-accent);
+    }
+
+    .nav-dot.current {
+      border-color: var(--color-accent);
+      background: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-light);
+    }
+
+    .nav-dot.visited {
+      background: var(--color-accent-muted);
+      border-color: var(--color-accent-muted);
+    }
+
+    /* Tooltip for nav dots */
+    .nav-dot::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-bg-code);
+      color: #CDD6F4;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-xs);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--duration-fast);
+    }
+
+    .nav-dot:hover::before {
+      opacity: 1;
+    }
+
+    /* Module structure */
+    .module {
+      min-height: 100dvh;
+      min-height: 100vh;
+      scroll-snap-align: start;
+      padding: var(--space-16) var(--space-6);
+      padding-top: calc(var(--nav-height) + var(--space-12));
+    }
+
+    .module-content {
+      max-width: var(--content-width);
+      margin: 0 auto;
+    }
+
+    .module-header {
+      margin-bottom: var(--space-16);
+    }
+
+    .module-number {
+      display: block;
+      font-family: var(--font-display);
+      font-size: var(--text-6xl);
+      font-weight: 800;
+      color: var(--color-accent);
+      opacity: 0.15;
+      line-height: 1;
+      margin-bottom: var(--space-4);
+    }
+
+    .module-title {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-4);
+    }
+
+    .module-subtitle {
+      font-size: var(--text-lg);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-snug);
+    }
+
+    .module-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-16);
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .screen-heading {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 600;
+      line-height: var(--leading-snug);
+    }
+
+    .screen p {
+      max-width: 65ch;
+      line-height: var(--leading-loose);
+    }
+
+    /* Animations */
+    .animate-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity var(--duration-slow) var(--ease-out),
+                  transform var(--duration-slow) var(--ease-out);
+    }
+
+    .animate-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stagger-children > .animate-in {
+      transition-delay: calc(var(--stagger-index, 0) * var(--stagger-delay));
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Code blocks - NO horizontal scroll */
+    pre, code {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: hidden;
+    }
+
+    /* Translation blocks */
+    .translation-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      margin: var(--space-8) 0;
+    }
+
+    .translation-code {
+      background: var(--color-bg-code);
+      color: #CDD6F4;
+      padding: var(--space-6);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: 1.7;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .translation-english {
+      background: var(--color-surface-warm);
+      padding: var(--space-6);
+      font-size: var(--text-sm);
+      line-height: 1.7;
+      border-left: 3px solid var(--color-accent);
+    }
+
+    .translation-label {
+      position: absolute;
+      top: var(--space-2);
+      right: var(--space-3);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.5;
+      font-family: var(--font-mono);
+    }
+
+    .translation-english .translation-label {
+      color: var(--color-text-muted);
+    }
+
+    .code-line {
+      display: block;
+    }
+
+    /* Syntax highlighting */
+    .code-keyword  { color: #CBA6F7; }
+    .code-string   { color: #A6E3A1; }
+    .code-function { color: #89B4FA; }
+    .code-comment  { color: #6C7086; }
+    .code-number   { color: #FAB387; }
+    .code-property { color: #F9E2AF; }
+    .code-operator { color: #94E2D5; }
+
+    /* Glossary tooltips */
+    .term {
+      border-bottom: 1.5px dashed var(--color-accent-muted);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .term:hover, .term.active {
+      border-bottom-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .term-tooltip {
+      position: fixed;
+      background: var(--color-bg-code);
+      color: #CDD6F4;
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      font-family: var(--font-body);
+      line-height: var(--leading-normal);
+      width: max(200px, min(320px, 80vw));
+      box-shadow: var(--shadow-lg);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--duration-fast);
+      z-index: 10000;
+    }
+
+    .term-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--color-bg-code);
+    }
+
+    .term-tooltip.visible {
+      opacity: 1;
+    }
+
+    .term-tooltip.flip {
+      bottom: auto;
+    }
+
+    .term-tooltip.flip::after {
+      top: auto;
+      bottom: 100%;
+      border-top-color: transparent;
+      border-bottom-color: var(--color-bg-code);
+    }
+
+    /* Callout boxes */
+    .callout {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      border-radius: var(--radius-md);
+      margin: var(--space-8) 0;
+      border-left: 4px solid;
+    }
+
+    .callout-accent {
+      border-color: var(--color-accent);
+      background: var(--color-accent-light);
+    }
+
+    .callout-info {
+      border-color: var(--color-info);
+      background: var(--color-info-light);
+    }
+
+    .callout-warning {
+      border-color: var(--color-error);
+      background: var(--color-error-light);
+    }
+
+    .callout-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .callout-content {
+      flex: 1;
+    }
+
+    .callout-title {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    /* Pattern cards */
+    .pattern-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-8) 0;
+    }
+
+    .pattern-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal);
+      border-top: 3px solid;
+    }
+
+    .pattern-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .pattern-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: var(--space-4);
+    }
+
+    .pattern-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .pattern-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+
+    /* Icon rows */
+    .icon-rows {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin: var(--space-8) 0;
+    }
+
+    .icon-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .icon-row p {
+      margin: 0;
+      color: var(--color-text-secondary);
+      font-size: var(--text-sm);
+    }
+
+    .icon-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    /* Step cards */
+    .step-cards {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin: var(--space-8) 0;
+    }
+
+    .step-card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--color-accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      flex-shrink: 0;
+    }
+
+    .step-body p {
+      margin: var(--space-1) 0 0;
+      color: var(--color-text-secondary);
+      font-size: var(--text-sm);
+    }
+
+    /* Flow diagrams */
+    .flow-steps {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin: var(--space-8) 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-step {
+      flex: 1;
+      min-width: 150px;
+      padding: var(--space-4);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .flow-step-num {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      font-weight: 700;
+      line-height: 28px;
+      margin-bottom: var(--space-2);
+    }
+
+    .flow-arrow {
+      font-size: 1.5rem;
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    /* Chat window */
+    .chat-window {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-md);
+      margin: var(--space-8) 0;
+    }
+
+    .chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+      min-height: 300px;
+    }
+
+    .chat-message {
+      display: flex;
+      gap: var(--space-3);
+      align-items: flex-start;
+    }
+
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: var(--text-sm);
+      flex-shrink: 0;
+    }
+
+    .chat-bubble {
+      flex: 1;
+      background: var(--color-bg-warm);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+    }
+
+    .chat-sender {
+      display: block;
+      font-weight: 600;
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-1);
+    }
+
+    .chat-bubble p {
+      margin: 0;
+      font-size: var(--text-sm);
+    }
+
+    .chat-typing {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+    }
+
+    .chat-typing-dots {
+      display: flex;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-bg-warm);
+      border-radius: var(--radius-md);
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-text-muted);
+      animation: typingBounce 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    .chat-controls {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .chat-controls button {
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--duration-fast);
+    }
+
+    .chat-controls button:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .chat-progress {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* Quiz elements */
+    .quiz-container {
+      background: var(--color-surface);
+      padding: var(--space-6);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      margin: var(--space-8) 0;
+    }
+
+    .quiz-question-block {
+      margin-bottom: var(--space-6);
+    }
+
+    .quiz-question {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      transition: border-color var(--duration-fast), background var(--duration-fast);
+    }
+
+    .quiz-option:hover {
+      border-color: var(--color-accent-muted);
+    }
+
+    .quiz-option.selected {
+      border-color: var(--color-accent);
+      background: var(--color-accent-light);
+    }
+
+    .quiz-option.correct {
+      border-color: var(--color-success);
+      background: var(--color-success-light);
+    }
+
+    .quiz-option.incorrect {
+      border-color: var(--color-error);
+      background: var(--color-error-light);
+    }
+
+    .quiz-option-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--color-border);
+      transition: all var(--duration-fast);
+      flex-shrink: 0;
+    }
+
+    .quiz-option.selected .quiz-option-radio {
+      border-color: var(--color-accent);
+      background: var(--color-accent);
+      box-shadow: inset 0 0 0 3px white;
+    }
+
+    .quiz-feedback {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height var(--duration-normal), opacity var(--duration-normal);
+    }
+
+    .quiz-feedback.show {
+      max-height: 300px;
+      opacity: 1;
+      padding: var(--space-3);
+      margin-top: var(--space-3);
+      border-radius: var(--radius-sm);
+    }
+
+    .quiz-feedback.success {
+      background: var(--color-success-light);
+      color: var(--color-success);
+    }
+
+    .quiz-feedback.error {
+      background: var(--color-error-light);
+      color: var(--color-error);
+    }
+
+    .quiz-feedback.warning {
+      background: var(--color-warning-light);
+      color: var(--color-warning);
+    }
+
+    .quiz-check-btn, .quiz-reset-btn {
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--duration-fast);
+      margin-right: var(--space-3);
+    }
+
+    .quiz-check-btn:hover, .quiz-reset-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .quiz-reset-btn {
+      background: var(--color-text-secondary);
+    }
+
+    .quiz-reset-btn:hover {
+      background: var(--color-text);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      :root {
+        --text-4xl: 1.875rem;
+        --text-5xl: 2.25rem;
+        --text-6xl: 3rem;
+      }
+
+      .translation-block {
+        grid-template-columns: 1fr;
+      }
+
+      .translation-english {
+        border-left: none;
+        border-top: 3px solid var(--color-accent);
+      }
+
+      .pattern-cards {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-dots {
+        gap: var(--space-2);
+      }
+
+      .nav-dot {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      :root {
+        --text-4xl: 1.5rem;
+        --text-5xl: 1.875rem;
+        --text-6xl: 2.25rem;
+      }
+
+      .module {
+        padding: var(--space-8) var(--space-4);
+      }
+
+      .pattern-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-steps {
+        flex-direction: column;
+      }
+
+      .flow-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="progress-bar" role="progressbar" aria-valuenow="0"></div>
+    <div class="nav-inner">
+      <span class="nav-title">Pake Course</span>
+      <div class="nav-dots">
+        <button class="nav-dot current" data-target="module-1" data-tooltip="What Pake Does" role="tab" aria-label="Module 1"></button>
+        <button class="nav-dot" data-target="module-2" data-tooltip="The Cast of Characters" role="tab" aria-label="Module 2"></button>
+        <button class="nav-dot" data-target="module-3" data-tooltip="How The Pieces Talk" role="tab" aria-label="Module 3"></button>
+        <button class="nav-dot" data-target="module-4" data-tooltip="The Build Pipeline" role="tab" aria-label="Module 4"></button>
+        <button class="nav-dot" data-target="module-5" data-tooltip="Clever Engineering Tricks" role="tab" aria-label="Module 5"></button>
+        <button class="nav-dot" data-target="module-6" data-tooltip="Making It Your Own" role="tab" aria-label="Module 6"></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Module 1: What Pake Does -->
+  <section class="module" id="module-1" style="background: var(--color-bg)">
+    <div class="module-content">
+      <header class="module-header animate-in">
+        <span class="module-number">01</span>
+        <h1 class="module-title">What Pake Does</h1>
+        <p class="module-subtitle">From "Type a Command" to "Double-Click an App"</p>
+      </header>
+
+      <div class="module-body">
+        <!-- Screen 1: What is Pake? -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">Turn Any Website Into a Desktop App</h2>
+          <p>
+            Imagine you love using <span class="term" data-definition="A web app for reading books, popular in China — think Kindle but in your browser.">WeRead</span>
+            to read books, but it only exists as a website. You have to open your browser, find the tab, and it gets lost among dozens of other tabs. You wish it was just... an app. Like Spotify or VS Code — something you can click to open, that lives in its own window.
+          </p>
+          <p>
+            <strong>That's exactly what Pake does.</strong>
+          </p>
+          <p>
+            Type one command — <code style="background: var(--color-bg-warm); padding: 0 4px; border-radius: 4px;">pake https://weread.qq.com</code> — and out comes a standalone desktop app. Double-click it, and WeRead opens like any other application on your computer. No browser tabs. No bookmarks. Just... an app.
+          </p>
+
+          <div class="callout callout-info">
+            <div class="callout-icon">💡</div>
+            <div class="callout-content">
+              <strong class="callout-title">Why Does This Matter?</strong>
+              <p>
+                As someone building with AI code tools, knowing how "website-to-app packaging" works helps you make better decisions: Should I build a web app or a desktop app? Can I wrap my project in a native shell? What are the tradeoffs of <span class="term" data-definition="A framework for building desktop apps with web technologies (HTML, CSS, JavaScript). Uses Chromium as the browser engine, which is why Electron apps tend to be large (100MB+) since they bundle an entire browser.">Electron</span> vs.
+                <span class="term" data-definition="A Rust-based framework for building lightweight desktop apps using web technologies. Unlike Electron, Tauri uses the system's native browser engine (WebKit on macOS, WebView2 on Windows), which makes apps much smaller (typically 5MB vs 100MB+).">Tauri</span>?
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Screen 2: The user journey -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">Let's Trace What Happens When You Run the Command</h2>
+          <p>
+            You open your terminal and type:
+          </p>
+          <pre style="background: var(--color-bg-code); color: #CDD6F4; padding: var(--space-4); border-radius: var(--radius-sm); font-family: var(--font-mono); margin: var(--space-4) 0;">$ pake https://github.com --name GitHub</pre>
+
+          <p>Under the hood, here's the journey that command takes:</p>
+
+          <div class="step-cards">
+            <div class="step-card">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <strong>The CLI Parses Your Command</strong>
+                <p>Pake reads "GitHub" as the app name and "https://github.com" as the URL to package</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <strong>It Fetches an Icon</strong>
+                <p>Pake tries to download GitHub's logo from multiple icon services — if one fails, it tries the next</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <strong>It Generates Configuration Files</strong>
+                <p>Settings like window size (1200x780), app name, and icon are merged into JSON configs</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">4</div>
+              <div class="step-body">
+                <strong>It Builds a Rust Application</strong>
+                <p>The <span class="term" data-definition="The Rust compiler. When Pake builds your app, it compiles Rust source code into a native binary (an executable file that runs on your OS). This is what makes Pake apps so fast — they're compiled machine code, not interpreted scripts.">Rust compiler</span> turns source code into a native app with a built-in web browser</p>
+              </div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">5</div>
+              <div class="step-body">
+                <strong>It Packages Everything</strong>
+                <p>On macOS, creates a <span class="term" data-definition="A DMG (Disk Image) file is like a virtual CD — it's a container that holds an app. When you download apps for macOS, they often come as .dmg files. You open the DMG, drag the app to your Applications folder, then you can delete the DMG.">DMG installer</span>. On Windows, an <span class="term" data-definition="An MSI (Microsoft Installer) file is a Windows installer package. It's the standard way to distribute and install software on Windows. When you run an .msi file, Windows knows how to extract the app, put it in the right place, and add it to your Start menu.">MSI installer</span></p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            And that's it. Five minutes later (or 30 seconds on subsequent builds), you have <code>GitHub.dmg</code> in your current folder. Open it, and GitHub loads in its own window — no browser chrome, no tabs, just the website acting like a native app.
+          </p>
+        </section>
+
+        <!-- Screen 3: The magic trick -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">The Secret: It's Not Really Building a Browser</h2>
+          <p>
+            Here's the clever part: Pake doesn't bundle an entire web browser like <span class="term" data-definition="Electron is a framework used to build apps like VS Code, Slack, and Discord. It works by packaging Chromium (the open-source version of Chrome) with Node.js. This means every Electron app includes a full browser engine, which is why they're often 100MB+ in size.">Electron</span> does. Instead, it uses your computer's <em>existing</em> browser engine:
+          </p>
+
+          <div class="icon-rows">
+            <div class="icon-row">
+              <div class="icon-circle" style="background: #5294E2;">🍎</div>
+              <div>
+                <strong>macOS</strong>
+                <p>Uses <span class="term" data-definition="WebKit is the browser engine behind Safari. It's the part that reads HTML/CSS/JavaScript and turns it into pixels on your screen. macOS includes WebKit by default, so Pake apps can use it without bundling their own browser.">WebKit</span> — the same engine Safari uses, already built into macOS</p>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-circle" style="background: #0078D4;">🪟</div>
+              <div>
+                <strong>Windows</strong>
+                <p>Uses <span class="term" data-definition="WebView2 is Microsoft's browser engine for Windows apps. It's based on Chromium (the same engine Chrome uses) and comes pre-installed on Windows 10 and 11. Apps that use WebView2 are essentially embedding a mini-Chrome without needing to bundle the entire browser.">WebView2</span> — Microsoft's Chromium-based webview, included in Windows 10/11</p>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-circle" style="background: #F9AB00;">🐧</div>
+              <div>
+                <strong>Linux</strong>
+                <p>Uses <span class="term" data-definition="WebKitGTK is the Linux version of WebKit, the same engine Safari uses. It's a browser engine packaged for Linux's GTK graphical toolkit. Many Linux apps use it to display web content without bundling a full browser.">WebKitGTK</span> — WebKit for Linux, installable via package managers</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-accent">
+            <div class="callout-icon">💡</div>
+            <div class="callout-content">
+              <strong class="callout-title">Key Insight: Leverage What's Already There</strong>
+              <p>
+                This pattern — using the platform's existing components instead of bundling your own — is everywhere in software. It's why Pake apps are ~20x smaller than Electron apps. When building with AI, always ask: "What can I use that's already on the user's system?" Not every problem needs a bundled solution.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Screen 4: Code translation - Simple config -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">What Actually Gets Built? Let's Look at the Config</h2>
+          <p>
+            When Pake builds your app, it creates a configuration file that tells the app what to do. Here's what that config looks like for our GitHub app:
+          </p>
+
+          <div class="translation-block">
+            <div class="translation-code">
+              <span class="translation-label">CODE</span>
+              <pre><code><span class="code-line">{</span>
+<span class="code-line">  <span class="code-property">"windows"</span>: [{</span>
+<span class="code-line">    <span class="code-property">"url"</span>: <span class="code-string">"https://github.com"</span>,</span>
+<span class="code-line">    <span class="code-property">"width"</span>: <span class="code-number">1200</span>,</span>
+<span class="code-line">    <span class="code-property">"height"</span>: <span class="code-number">780</span>,</span>
+<span class="code-line">    <span class="code-property">"hide_title_bar"</span>: <span class="code-keyword">false</span></span>
+<span class="code-line">  }]</span>
+<span class="code-line">}</span></code></pre>
+            </div>
+            <div class="translation-english">
+              <span class="translation-label">PLAIN ENGLISH</span>
+              <div class="translation-lines">
+                <p>Start of the configuration...</p>
+                <p>This app will have windows (could be multiple)...</p>
+                <p>Load GitHub's website when the app opens...</p>
+                <p>The window should be 1200 pixels wide...</p>
+                <p>...and 780 pixels tall (laptop-friendly size)...</p>
+                <p>Keep the title bar visible (show app name and close button)...</p>
+                <p>End of window config...</p>
+                <p>End of file.</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            That's it. When the app launches, the Rust code reads this file and says: "Okay, open a 1200x780 window and load https://github.com in the built-in browser." Everything else — scrolling, clicking links, logging in — works exactly like the website because <em>it IS the website</em>, just displayed in a dedicated window.
+          </p>
+        </section>
+
+        <!-- Screen 5: Quiz -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">Quick Check: Did You Get It?</h2>
+
+          <div class="quiz-container">
+            <div class="quiz-question-block" data-question="q1-1" data-correct="option-b">
+              <h3 class="quiz-question">Your client wants to turn their web app into a desktop app. Based on what you learned, which approach would make the app smaller?</h3>
+              <div class="quiz-options">
+                <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>Use Electron to bundle the app with Chromium</span>
+                </button>
+                <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>Use Tauri to leverage the system's existing browser engine</span>
+                </button>
+                <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>Build a custom browser from scratch</span>
+                </button>
+              </div>
+              <div class="quiz-feedback" id="q1-1-feedback"></div>
+            </div>
+
+            <div class="quiz-question-block" data-question="q1-2" data-correct="option-c">
+              <h3 class="quiz-question">You run <code>pake https://twitter.com</code> and the app opens... but it's showing a mobile version of Twitter. Where would you look to fix this?</h3>
+              <div class="quiz-options">
+                <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>Change the window size to be bigger</span>
+                </button>
+                <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>Use a different browser engine</span>
+                </button>
+                <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>Check the user agent setting (what the app tells the website about itself)</span>
+                </button>
+              </div>
+              <div class="quiz-feedback" id="q1-2-feedback"></div>
+            </div>
+
+            <button class="quiz-check-btn" onclick="checkQuiz('module-1')">Check Answers</button>
+            <button class="quiz-reset-btn" onclick="resetQuiz('module-1')">Try Again</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Module 2: The Cast of Characters -->
+  <section class="module" id="module-2" style="background: var(--color-bg-warm)">
+    <div class="module-content">
+      <header class="module-header animate-in">
+        <span class="module-number">02</span>
+        <h1 class="module-title">The Cast of Characters</h1>
+        <p class="module-subtitle">Who does what when Pake builds your app</p>
+      </header>
+
+      <div class="module-body">
+
+        <!-- Screen 1: The four main actors -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">Four Players Work Together to Build Your App</h2>
+          <p>
+            Think of Pake like a film production. You (the user) give the script — "I want a GitHub app." Then four departments collaborate to make it happen:
+          </p>
+
+          <div class="pattern-cards">
+            <div class="pattern-card" style="border-top-color: var(--color-actor-1);">
+              <div class="pattern-icon" style="background: var(--color-actor-1);">📦</div>
+              <h4 class="pattern-title">CLI (Director)</h4>
+              <p class="pattern-desc">Takes your command, coordinates everyone else, makes final decisions about what gets built.</p>
+            </div>
+
+            <div class="pattern-card" style="border-top-color: var(--color-actor-2);">
+              <div class="pattern-icon" style="background: var(--color-actor-2);">⚙️</div>
+              <h4 class="pattern-title">Config System (Screenwriter)</h4>
+              <p class="pattern-desc">Turns your options (name, size, icon) into detailed instructions the app can read.</p>
+            </div>
+
+            <div class="pattern-card" style="border-top-color: var(--color-actor-3);">
+              <div class="pattern-icon" style="background: var(--color-actor-3);">🦀</div>
+              <h4 class="pattern-title">Rust Core (Actor)</h4>
+              <p class="pattern-desc">The actual app that runs on your computer — opens windows, loads websites, handles shortcuts.</p>
+            </div>
+
+            <div class="pattern-card" style="border-top-color: var(--color-actor-4);">
+              <div class="pattern-icon" style="background: var(--color-actor-4);">🎨</div>
+              <h4 class="pattern-title">Icon Pipeline (Set Designer)</h4>
+              <p class="pattern-desc">Downloads and converts icons so your app looks professional on every platform.</p>
+            </div>
+          </div>
+
+          <p>
+            Each one has a specific job. The CLI is written in <span class="term" data-definition="TypeScript is JavaScript with type safety — it catches errors before you run the code. For example, if a function expects a number and you pass a string, TypeScript will warn you. It compiles down to regular JavaScript that runs in Node.js.">TypeScript</span> and runs on
+            <span class="term" data-definition="Node.js is a runtime that lets you run JavaScript outside of a browser — on your computer, on a server, anywhere. Think of it as JavaScript for building command-line tools, servers, and scripts instead of just interactive websites.">Node.js</span>. The Rust Core is written in
+            <span class="term" data-definition="Rust is a programming language focused on speed and safety. It's used for systems programming (building operating systems, browsers, game engines) because it's as fast as C++ but prevents common bugs like memory leaks. Tauri chose Rust to make desktop apps fast and secure.">Rust</span> and compiles to native code. Let's see how they communicate.
+          </p>
+        </section>
+
+        <!-- Screen 2: Chat animation between components -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">They Talk to Each Other Like This</h2>
+          <p>
+            When you run <code>pake https://github.com</code>, here's the conversation that happens behind the scenes:
+          </p>
+
+          <div class="chat-window">
+            <div class="chat-messages" id="chat-module2">
+              <div class="chat-message" data-msg="0" data-sender="cli" style="display:none;">
+                <div class="chat-avatar" style="background: var(--color-actor-1);">CLI</div>
+                <div class="chat-bubble">
+                  <span class="chat-sender" style="color: var(--color-actor-1);">CLI</span>
+                  <p>Hey Config, user wants a GitHub app. Can you prepare the settings?</p>
+                </div>
+              </div>
+
+              <div class="chat-message" data-msg="1" data-sender="config" style="display:none;">
+                <div class="chat-avatar" style="background: var(--color-actor-2);">CFG</div>
+                <div class="chat-bubble">
+                  <span class="chat-sender" style="color: var(--color-actor-2);">Config System</span>
+                  <p>On it. Creating pake.json with url="https://github.com", width=1200, height=780...</p>
+                </div>
+              </div>
+
+              <div class="chat-message" data-msg="2" data-sender="cli" style="display:none;">
+                <div class="chat-avatar" style="background: var(--color-actor-1);">CLI</div>
+                <div class="chat-bubble">
+                  <span class="chat-sender" style="color: var(--color-actor-1);">CLI</span>
+                  <p>Icon Pipeline, we need a logo for GitHub. Can you fetch one?</p>
+                </div>
+              </div>
+
+              <div class="chat-message" data-msg="3" data-sender="icon" style="display:none;">
+                <div class="chat-avatar" style="background: var(--color-actor-4);">ICO</div>
+                <div class="chat-bubble">
+                  <span class="chat-sender" style="color: var(--color-actor-4);">Icon Pipeline</span>
+                  <p>Trying logo.dev... Got it! Converting to .icns for macOS, .ico for Windows...</p>
+                </div>
+              </div>
+
+              <div class="chat-message" data-msg="4" data-sender="cli" style="display:none;">
+                <div class="chat-avatar" style="background: var(--color-actor-1);">CLI</div>
+                <div class="chat-bubble">
+                  <span class="chat-sender" style="color: var(--color-actor-1);">CLI</span>
+                  <p>Config is ready, icon is ready. Rust Core, you're up — build the app!</p>
+                </div>
+              </div>
+
+              <div class="chat-message" data-msg="5" data-sender="rust" style="display:none;">
+                <div class="chat-avatar" style="background: var(--color-actor-3);">RST</div>
+                <div class="chat-bubble">
+                  <span class="chat-sender" style="color: var(--color-actor-3);">Rust Core</span>
+                  <p>Compiling... Reading pake.json... Setting up window with WebView... Injecting keyboard shortcuts...</p>
+                </div>
+              </div>
+
+              <div class="chat-message" data-msg="6" data-sender="rust" style="display:none;">
+                <div class="chat-avatar" style="background: var(--color-actor-3);">RST</div>
+                <div class="chat-bubble">
+                  <span class="chat-sender" style="color: var(--color-actor-3);">Rust Core</span>
+                  <p>Done! Binary compiled. Packaging into GitHub.dmg...</p>
+                </div>
+              </div>
+
+              <div class="chat-message" data-msg="7" data-sender="cli" style="display:none;">
+                <div class="chat-avatar" style="background: var(--color-actor-1);">CLI</div>
+                <div class="chat-bubble">
+                  <span class="chat-sender" style="color: var(--color-actor-1);">CLI</span>
+                  <p>Perfect. Copying GitHub.dmg to the user's folder. We're done here. ✅</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-typing" id="chat-typing-module2" style="display:none;">
+              <div class="chat-avatar" id="typing-avatar-module2">?</div>
+              <div class="chat-typing-dots">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+              </div>
+            </div>
+
+            <div class="chat-controls">
+              <button onclick="playChatNext('module2')">Next Message</button>
+              <button onclick="playChatAll('module2')">Play All</button>
+              <button onclick="resetChat('module2')">Replay</button>
+              <span class="chat-progress" id="chat-progress-module2">0 / 8 messages</span>
+            </div>
+          </div>
+
+          <p>
+            Each component has a clear responsibility. The CLI never touches the browser engine — that's the Rust Core's job. The Rust Core never downloads icons — that's the Icon Pipeline's domain. This separation makes the codebase easier to maintain and debug.
+          </p>
+
+          <div class="callout callout-accent">
+            <div class="callout-icon">💡</div>
+            <div class="callout-content">
+              <strong class="callout-title">Universal Principle: Separation of Concerns</strong>
+              <p>
+                This pattern — splitting responsibilities into focused roles — is one of the most important ideas in software engineering. Engineers call it <span class="term" data-definition="Separation of concerns means each part of a system has one specific job and doesn't interfere with others. Like a restaurant: the chef cooks, the waiter serves, the cashier handles money. Nobody does everything. This makes the system easier to fix (if orders are wrong, you talk to the waiter, not the chef).">separation of concerns</span>. When you're steering AI to build something complex, tell it: "Create separate modules for X, Y, and Z — don't mix their logic." You'll get cleaner, more debuggable code.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Screen 3: Code translation - CLI entry point -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">What the CLI Actually Does: The Code</h2>
+          <p>
+            Let's peek at the TypeScript code that runs when you type <code>pake [url]</code>. This is the orchestrator — the piece that kicks off the whole process:
+          </p>
+
+          <div class="translation-block">
+            <div class="translation-code">
+              <span class="translation-label">CODE</span>
+              <pre><code><span class="code-line"><span class="code-keyword">program</span>.<span class="code-function">action</span>(<span class="code-keyword">async</span> (url, options) <span class="code-operator">=></span> {</span>
+<span class="code-line">  <span class="code-keyword">const</span> appOptions = <span class="code-keyword">await</span> <span class="code-function">handleInputOptions</span>(options, url);</span>
+<span class="code-line">  <span class="code-keyword">const</span> builder = BuilderProvider.<span class="code-function">create</span>(appOptions);</span>
+<span class="code-line">  <span class="code-keyword">await</span> builder.<span class="code-function">prepare</span>();</span>
+<span class="code-line">  <span class="code-keyword">await</span> builder.<span class="code-function">build</span>(url);</span>
+<span class="code-line">});</span></code></pre>
+            </div>
+            <div class="translation-english">
+              <span class="translation-label">PLAIN ENGLISH</span>
+              <div class="translation-lines">
+                <p>When the user runs the pake command...</p>
+                <p>First, clean up and validate their options (name, size, etc.)...</p>
+                <p>Figure out which platform we're on (Mac/Windows/Linux) and create the right builder...</p>
+                <p>Install any missing dependencies (Rust, npm packages)...</p>
+                <p>Actually build the app...</p>
+                <p>Done!</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            Notice how compact this is. The CLI doesn't know <em>how</em> to build for macOS vs. Windows — it just says "create a builder" and the <code>BuilderProvider</code> picks the right one. That's another pattern worth knowing:
+            <span class="term" data-definition="The factory pattern is a way to create objects without specifying their exact type. Imagine a car factory: you ask for 'a sedan,' and the factory decides whether to give you a Honda Accord or a Toyota Camry based on what's available. In code, you ask for 'a builder,' and the factory gives you MacBuilder or WinBuilder based on your OS.">the factory pattern</span>.
+          </p>
+        </section>
+
+        <!-- Screen 4: Where each component lives -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">Where to Find Each Component in the Codebase</h2>
+          <p>
+            If you clone the Pake repository, here's where each character lives:
+          </p>
+
+          <div class="icon-rows">
+            <div class="icon-row">
+              <div class="icon-circle" style="background: var(--color-actor-1);">📦</div>
+              <div>
+                <strong>/bin/</strong> — CLI (TypeScript)
+                <p>Files like <code>cli.ts</code>, <code>builders/MacBuilder.ts</code>, <code>options/icon.ts</code></p>
+              </div>
+            </div>
+
+            <div class="icon-row">
+              <div class="icon-circle" style="background: var(--color-actor-2);">⚙️</div>
+              <div>
+                <strong>/src-tauri/*.json</strong> — Config Templates
+                <p><code>pake.json</code>, <code>tauri.conf.json</code> — merged with your options at build time</p>
+              </div>
+            </div>
+
+            <div class="icon-row">
+              <div class="icon-circle" style="background: var(--color-actor-3);">🦀</div>
+              <div>
+                <strong>/src-tauri/src/</strong> — Rust Core
+                <p><code>lib.rs</code> (setup), <code>app/window.rs</code> (WebView), <code>app/invoke.rs</code> (commands)</p>
+              </div>
+            </div>
+
+            <div class="icon-row">
+              <div class="icon-circle" style="background: var(--color-actor-4);">🎨</div>
+              <div>
+                <strong>/bin/options/icon.ts</strong> — Icon Pipeline
+                <p>580 lines of icon downloading, converting, and platform-specific formatting</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            Now when you want to change something — like "I want to add support for a new icon service" — you know exactly where to look: <code>/bin/options/icon.ts</code>. Or "I want to add a new keyboard shortcut" → <code>/src-tauri/src/inject/event.js</code>.
+          </p>
+        </section>
+
+        <!-- Screen 5: Quiz -->
+        <section class="screen animate-in">
+          <h2 class="screen-heading">Test Your Understanding</h2>
+
+          <div class="quiz-container">
+            <div class="quiz-question-block" data-question="q2-1" data-correct="option-b">
+              <h3 class="quiz-question">You want to add a feature that automatically saves the window size when the user quits the app. Which component should handle this?</h3>
+              <div class="quiz-options">
+                <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>The CLI — it controls everything</span>
+                </button>
+                <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>The Rust Core — it's the part that runs when the app is open</span>
+                </button>
+                <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>The Icon Pipeline — it handles visual aspects</span>
+                </button>
+              </div>
+              <div class="quiz-feedback" id="q2-1-feedback"></div>
+            </div>
+
+            <div class="quiz-question-block" data-question="q2-2" data-correct="option-c">
+              <h3 class="quiz-question">A user reports: "The app icon looks pixelated on my 4K monitor." Where would you investigate?</h3>
+              <div class="quiz-options">
+                <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>The Config System — it controls how things look</span>
+                </button>
+                <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>The Rust Core — it renders the window</span>
+                </button>
+                <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                  <div class="quiz-option-radio"></div>
+                  <span>The Icon Pipeline — it might not be generating high-res icon sizes</span>
+                </button>
+              </div>
+              <div class="quiz-feedback" id="q2-2-feedback"></div>
+            </div>
+
+            <button class="quiz-check-btn" onclick="checkQuiz('module-2')">Check Answers</button>
+            <button class="quiz-reset-btn" onclick="resetQuiz('module-2')">Try Again</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Module 3-6 will be added in the next section due to size constraints -->
+  <!-- For now, let me complete the JavaScript at the bottom -->
+
+  <script>
+    (function() {
+      'use strict';
+
+      // Intersection Observer for animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+
+      document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+
+      // Stagger children
+      document.querySelectorAll('.stagger-children').forEach(parent => {
+        Array.from(parent.children).forEach((child, i) => {
+          child.style.setProperty('--stagger-index', i);
+        });
+      });
+
+      // Progress bar
+      const progressBar = document.querySelector('.progress-bar');
+      function updateProgressBar() {
+        const scrollTop = window.scrollY;
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / scrollHeight) * 100;
+        progressBar.style.width = progress + '%';
+      }
+      window.addEventListener('scroll', () => {
+        requestAnimationFrame(updateProgressBar);
+      }, { passive: true });
+
+      // Navigation dots
+      const modules = document.querySelectorAll('.module');
+      const navDots = document.querySelectorAll('.nav-dot');
+
+      navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          modules[index].scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // Update active dot on scroll
+      function updateActiveDot() {
+        const scrollPos = window.scrollY + 100;
+        let currentModule = 0;
+
+        modules.forEach((module, index) => {
+          if (module.offsetTop <= scrollPos) {
+            currentModule = index;
+          }
+        });
+
+        navDots.forEach((dot, index) => {
+          dot.classList.remove('current');
+          if (index < currentModule) {
+            dot.classList.add('visited');
+          }
+          if (index === currentModule) {
+            dot.classList.add('current');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', () => {
+        requestAnimationFrame(updateActiveDot);
+      }, { passive: true });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+        const currentModuleIndex = Array.from(modules).findIndex(m => {
+          const rect = m.getBoundingClientRect();
+          return rect.top >= -100 && rect.top <= 100;
+        });
+
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          if (currentModuleIndex < modules.length - 1) {
+            modules[currentModuleIndex + 1].scrollIntoView({ behavior: 'smooth' });
+            e.preventDefault();
+          }
+        }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          if (currentModuleIndex > 0) {
+            modules[currentModuleIndex - 1].scrollIntoView({ behavior: 'smooth' });
+            e.preventDefault();
+          }
+        }
+      });
+
+      // Glossary tooltips
+      let activeTooltip = null;
+      const actors = {
+        'cli': { initials: 'CLI', color: 'var(--color-actor-1)' },
+        'config': { initials: 'CFG', color: 'var(--color-actor-2)' },
+        'rust': { initials: 'RST', color: 'var(--color-actor-3)' },
+        'icon': { initials: 'ICO', color: 'var(--color-actor-4)' },
+      };
+
+      function positionTooltip(term, tip) {
+        const rect = term.getBoundingClientRect();
+        const tipWidth = 300;
+        let left = rect.left + rect.width / 2 - tipWidth / 2;
+        left = Math.max(8, Math.min(left, window.innerWidth - tipWidth - 8));
+
+        document.body.appendChild(tip);
+        const tipHeight = tip.offsetHeight;
+
+        if (rect.top - tipHeight - 8 < 0) {
+          tip.style.top = (rect.bottom + 8) + 'px';
+          tip.classList.add('flip');
+        } else {
+          tip.style.top = (rect.top - tipHeight - 8) + 'px';
+          tip.classList.remove('flip');
+        }
+
+        tip.style.left = left + 'px';
+      }
+
+      document.querySelectorAll('.term').forEach(term => {
+        const tip = document.createElement('span');
+        tip.className = 'term-tooltip';
+        tip.textContent = term.dataset.definition;
+
+        term.addEventListener('mouseenter', () => {
+          if (activeTooltip && activeTooltip !== tip) {
+            activeTooltip.classList.remove('visible');
+            activeTooltip.remove();
+          }
+          positionTooltip(term, tip);
+          requestAnimationFrame(() => tip.classList.add('visible'));
+          activeTooltip = tip;
+        });
+
+        term.addEventListener('mouseleave', () => {
+          tip.classList.remove('visible');
+          setTimeout(() => { if (!tip.classList.contains('visible')) tip.remove(); }, 150);
+          activeTooltip = null;
+        });
+
+        term.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (activeTooltip && activeTooltip !== tip) {
+            activeTooltip.classList.remove('visible');
+            activeTooltip.remove();
+          }
+          if (tip.classList.contains('visible')) {
+            tip.classList.remove('visible');
+            tip.remove();
+            activeTooltip = null;
+          } else {
+            positionTooltip(term, tip);
+            requestAnimationFrame(() => tip.classList.add('visible'));
+            activeTooltip = tip;
+          }
+        });
+      });
+
+      document.addEventListener('click', () => {
+        if (activeTooltip) {
+          activeTooltip.classList.remove('visible');
+          activeTooltip.remove();
+          activeTooltip = null;
+        }
+      });
+
+      // Quiz functionality
+      window.selectOption = function(btn) {
+        const block = btn.closest('.quiz-question-block');
+        block.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+        btn.classList.add('selected');
+      };
+
+      const quizExplanations = {
+        'q1-1': {
+          correct: "Exactly! Tauri leverages the system's existing WebKit/WebView2/WebKitGTK, so you don't bundle a browser. This is why Pake apps are ~5MB instead of ~100MB. When talking to AI, you'd say: 'Use Tauri to keep the app size small by using the system webview instead of bundling Chromium.'",
+          incorrect: "Not quite. Electron bundles an entire Chromium browser with every app, which is why Electron apps are typically 100MB+. Tauri uses the system's built-in browser engine, making apps ~20x smaller. Building a custom browser would take years and make the app even larger!"
+        },
+        'q1-2': {
+          correct: "Spot on! Websites detect whether you're on mobile or desktop by checking the user agent string — a piece of text the browser sends that says 'I'm Safari on iPhone' or 'I'm Chrome on Windows.' If Pake's user agent says 'mobile,' Twitter serves the mobile site. You'd tell AI: 'Check the user agent configuration and make sure it matches a desktop browser.'",
+          incorrect: "Not this one. Window size affects layout, but Twitter decides which version to show based on the user agent — the string that tells the website 'I'm Chrome on a laptop' vs 'I'm Safari on an iPhone.' The browser engine doesn't matter either (WebKit on macOS can show desktop sites just fine). The fix is in the user agent setting."
+        },
+        'q2-1': {
+          correct: "Exactly! The Rust Core is the part that actually runs when the app is open. It can listen for window resize events and save the size to a config file. The CLI only runs during the build process — it's not there when the app is running. When instructing AI, you'd say: 'Add window state persistence to the Rust application layer, not the CLI.'",
+          incorrect: "Not quite. The CLI runs once during the build process — it's not there when the app is running. The Icon Pipeline only handles icon graphics. The Rust Core is the application runtime — it's what's actually running when the user has the app open, so it's the right place to save window state."
+        },
+        'q2-2': {
+          correct: "Exactly right! Icon Pipeline generates icons in multiple sizes (.icns files contain 16px, 32px, 128px, 256px, 512px, 1024px versions). If it's only generating low-res sizes or not including the 1024px version, icons look fuzzy on high-DPI displays. You'd tell AI: 'Check icon.ts to ensure we're generating all required icon sizes including 512px and 1024px for Retina displays.'",
+          incorrect: "Not this one. The Config System and Rust Core handle window setup and rendering, but the icon itself is created by the Icon Pipeline during the build process. The pipeline downloads and converts icons to platform-specific formats (.icns, .ico) with multiple sizes embedded. If high-res sizes are missing, icons look pixelated on 4K monitors."
+        }
+      };
+
+      window.checkQuiz = function(sectionId) {
+        const container = document.querySelector(`#${sectionId} .quiz-container`);
+        const questions = container.querySelectorAll('.quiz-question-block');
+        let correct = 0;
+
+        questions.forEach(q => {
+          const selected = q.querySelector('.quiz-option.selected');
+          const feedback = q.querySelector('.quiz-feedback');
+          const correctValue = q.dataset.correct;
+          const questionId = q.dataset.question;
+
+          if (!selected) {
+            feedback.textContent = 'Pick an answer first!';
+            feedback.className = 'quiz-feedback show warning';
+            return;
+          }
+
+          if (selected.dataset.value === correctValue) {
+            correct++;
+            selected.classList.add('correct');
+            feedback.innerHTML = '<strong>Exactly!</strong> ' + quizExplanations[questionId].correct;
+            feedback.className = 'quiz-feedback show success';
+          } else {
+            selected.classList.add('incorrect');
+            q.querySelector(`[data-value="${correctValue}"]`).classList.add('correct');
+            feedback.innerHTML = '<strong>Not quite.</strong> ' + quizExplanations[questionId].incorrect;
+            feedback.className = 'quiz-feedback show error';
+          }
+
+          q.querySelectorAll('.quiz-option').forEach(o => o.disabled = true);
+        });
+      };
+
+      window.resetQuiz = function(sectionId) {
+        const container = document.querySelector(`#${sectionId} .quiz-container`);
+        container.querySelectorAll('.quiz-option').forEach(o => {
+          o.classList.remove('selected', 'correct', 'incorrect');
+          o.disabled = false;
+        });
+        container.querySelectorAll('.quiz-feedback').forEach(f => {
+          f.className = 'quiz-feedback';
+        });
+      };
+
+      // Chat animation
+      const chatStates = {};
+
+      window.playChatNext = function(moduleId) {
+        if (!chatStates[moduleId]) {
+          chatStates[moduleId] = { index: 0 };
+        }
+
+        const state = chatStates[moduleId];
+        const messages = document.querySelectorAll(`#chat-${moduleId} .chat-message`);
+
+        if (state.index >= messages.length) return;
+
+        const msg = messages[state.index];
+        const sender = msg.dataset.sender;
+        const typing = document.getElementById(`chat-typing-${moduleId}`);
+        const avatar = document.getElementById(`typing-avatar-${moduleId}`);
+
+        if (actors[sender]) {
+          avatar.textContent = actors[sender].initials;
+          avatar.style.background = actors[sender].color;
+        }
+        typing.style.display = 'flex';
+
+        setTimeout(() => {
+          typing.style.display = 'none';
+          msg.style.display = 'flex';
+          msg.style.animation = 'fadeSlideUp 0.3s var(--ease-out)';
+          state.index++;
+          document.getElementById(`chat-progress-${moduleId}`).textContent = `${state.index} / ${messages.length} messages`;
+        }, 800);
+      };
+
+      window.playChatAll = function(moduleId) {
+        const interval = setInterval(() => {
+          const state = chatStates[moduleId] || { index: 0 };
+          const messages = document.querySelectorAll(`#chat-${moduleId} .chat-message`);
+          if (state.index >= messages.length) {
+            clearInterval(interval);
+            return;
+          }
+          window.playChatNext(moduleId);
+        }, 1200);
+      };
+
+      window.resetChat = function(moduleId) {
+        chatStates[moduleId] = { index: 0 };
+        const messages = document.querySelectorAll(`#chat-${moduleId} .chat-message`);
+        messages.forEach(msg => {
+          msg.style.display = 'none';
+        });
+        document.getElementById(`chat-typing-${moduleId}`).style.display = 'none';
+        document.getElementById(`chat-progress-${moduleId}`).textContent = `0 / ${messages.length} messages`;
+      };
+
+    })();
+  </script>
+
+</body>
+</html>
